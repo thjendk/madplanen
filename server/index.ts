@@ -6,24 +6,32 @@ import path from 'path';
 import apollo from 'config/apolloServer';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import jwt from 'jsonwebtoken';
 import './config/objection';
+import User from 'models/user.model';
 const app = express();
 const port = process.env.PORT || 3001;
-const secret = process.env.SECRET || '';
 
 app.use(helmet());
 app.use(cookieParser());
 app.use(async (req: any, res, next) => {
 	const token = req.cookies?.user;
 
-	if (token) {
-		try {
-			// Check for user?
-		} catch (error) {}
+	try {
+		if (token) {
+			const user = User.query().findById(token.id);
+			if (user) {
+				req.user = user;
+			} else {
+				req.user = null;
+				res.cookie('user', null, { expires: new Date(0) });
+			}
+		}
+	} catch (error) {
+		req.user = null;
+		res.cookie('user', null, { expires: new Date(0) });
+	} finally {
+		next();
 	}
-
-	next();
 });
 
 apollo.applyMiddleware({ app });

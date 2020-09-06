@@ -1,4 +1,8 @@
 import { gql } from 'apollo-server-express';
+import { dayTypeDefs, dayResolvers } from './day.type';
+import { ingredientTypeDefs, ingredientResolvers } from './ingredient.type';
+import { recipeTypeDefs, recipeResolvers } from './recipe.type';
+import { userTypeDefs, userResolvers } from './user.type';
 
 const rootDefs = gql`
 	type Query {
@@ -10,6 +14,6 @@ const rootDefs = gql`
 	}
 `;
 
-export const typeDefs = [rootDefs];
+export const typeDefs = [rootDefs, dayTypeDefs, ingredientTypeDefs, recipeTypeDefs, userTypeDefs];
 
-export const resolvers = [];
+export const resolvers = [dayResolvers, ingredientResolvers, recipeResolvers, userResolvers];

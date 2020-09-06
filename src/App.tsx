@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
-import Frontpage from 'components/Frontpage';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
+import FoodPlan from 'components/FoodPlan/FoodPlan';
 
 const Layout = styled.div`
 	display: flex;
@@ -25,7 +25,7 @@ const App: React.SFC<AppProps> = () => {
 			<Header />
 			<Layout>
 				<Switch>
-					<Route path="/" component={Frontpage} />
+					<Route path="/" component={FoodPlan} />
 				</Switch>
 			</Layout>
 			<div style={{ flexGrow: 1 }} />
