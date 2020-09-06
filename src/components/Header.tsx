@@ -42,7 +42,7 @@ const Header: React.SFC<HeaderProps> = () => {
 				onClick={() => history.push('/')}
 				style={{ width: '100%', margin: '0 auto', justifyContent: 'center' }}
 			>
-				Boilerplate
+				Madplanen
 			</MenuItem>
 		</MenuBar>
 	);

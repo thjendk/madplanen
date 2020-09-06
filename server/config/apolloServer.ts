@@ -2,11 +2,10 @@ import { ApolloServer } from 'apollo-server-express';
 import { typeDefs, resolvers } from 'graphql/types';
 import express from 'express';
 import User from 'models/user.model';
-
-const generateLoaders = () => ({});
+import loaders from 'graphql/types/loaders';
 
 const generateContext = (req: express.Request & { user: User }, res: express.Response) => ({
-	...generateLoaders(),
+	...loaders(),
 	res,
 	req,
 	user: req.user

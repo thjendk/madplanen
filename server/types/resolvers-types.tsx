@@ -18,6 +18,10 @@ export type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['Boolean']>;
   days?: Maybe<Array<Maybe<Day>>>;
+  day?: Maybe<Day>;
+  ingredients?: Maybe<Array<Maybe<Ingredient>>>;
+  recipes?: Maybe<Array<Maybe<Recipe>>>;
+  recipe?: Maybe<Recipe>;
 };
 
 
@@ -26,10 +30,29 @@ export type QueryDaysArgs = {
   numberOfDays?: Maybe<Scalars['Int']>;
 };
 
+
+export type QueryDayArgs = {
+  id?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryRecipeArgs = {
+  id?: Maybe<Scalars['Int']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['Boolean']>;
   createDay?: Maybe<Day>;
+  addRecipeToDay?: Maybe<Day>;
+  removeRecipeFromDay?: Maybe<Day>;
+  createIngredient?: Maybe<Ingredient>;
+  createRecipe?: Maybe<Recipe>;
+  addIngredientToRecipe?: Maybe<Recipe>;
+  removeIngredientFromRecipe?: Maybe<Recipe>;
+  login?: Maybe<Scalars['String']>;
+  logout?: Maybe<Scalars['String']>;
+  createUser?: Maybe<Scalars['String']>;
 };
 
 
@@ -37,16 +60,60 @@ export type MutationCreateDayArgs = {
   data?: Maybe<DayInput>;
 };
 
+
+export type MutationAddRecipeToDayArgs = {
+  data?: Maybe<DayRecipeInput>;
+};
+
+
+export type MutationRemoveRecipeFromDayArgs = {
+  data?: Maybe<DayRecipeInput>;
+};
+
+
+export type MutationCreateIngredientArgs = {
+  data?: Maybe<IngredientInput>;
+};
+
+
+export type MutationCreateRecipeArgs = {
+  data?: Maybe<RecipeInput>;
+};
+
+
+export type MutationAddIngredientToRecipeArgs = {
+  data?: Maybe<RecipeIngredientInput>;
+};
+
+
+export type MutationRemoveIngredientFromRecipeArgs = {
+  id?: Maybe<Scalars['Int']>;
+};
+
+
+export type MutationLoginArgs = {
+  data?: Maybe<LoginInput>;
+};
+
+
+export type MutationCreateUserArgs = {
+  data?: Maybe<UserInput>;
+};
+
 export type Day = {
   __typename?: 'Day';
   id?: Maybe<Scalars['Int']>;
   date?: Maybe<Scalars['String']>;
-  recipe?: Maybe<Recipe>;
+  recipes?: Maybe<Array<Maybe<Recipe>>>;
   user?: Maybe<User>;
 };
 
 export type DayInput = {
   date?: Maybe<Scalars['String']>;
+};
+
+export type DayRecipeInput = {
+  dayId?: Maybe<Scalars['Int']>;
   recipeId?: Maybe<Scalars['Int']>;
 };
 
@@ -65,16 +132,52 @@ export type IngredientCategory = {
   index?: Maybe<Scalars['Int']>;
 };
 
+export type IngredientInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['Int']>;
+  categoryId?: Maybe<Scalars['Int']>;
+};
+
 export type Recipe = {
   __typename?: 'Recipe';
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
-  ingredients?: Maybe<Array<Maybe<Ingredient>>>;
+  ingredients?: Maybe<Array<Maybe<RecipeIngredient>>>;
+};
+
+export type RecipeIngredient = {
+  __typename?: 'RecipeIngredient';
+  id?: Maybe<Scalars['Int']>;
+  amount?: Maybe<Scalars['Int']>;
+  ingredient?: Maybe<Ingredient>;
+  recipe?: Maybe<Recipe>;
+};
+
+export type RecipeInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type RecipeIngredientInput = {
+  ingredientId?: Maybe<Scalars['Int']>;
+  recipeId?: Maybe<Scalars['Int']>;
+  amount?: Maybe<Scalars['Int']>;
 };
 
 export type User = {
   __typename?: 'User';
   id?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+};
+
+export type UserInput = {
+  username?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+};
+
+export type LoginInput = {
   username?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
 };
@@ -171,10 +274,17 @@ export type ResolversTypes = ResolversObject<{
   Mutation: ResolverTypeWrapper<{}>;
   Day: ResolverTypeWrapper<Partial<Day>>;
   DayInput: ResolverTypeWrapper<Partial<DayInput>>;
+  DayRecipeInput: ResolverTypeWrapper<Partial<DayRecipeInput>>;
   Ingredient: ResolverTypeWrapper<Partial<Ingredient>>;
   IngredientCategory: ResolverTypeWrapper<Partial<IngredientCategory>>;
+  IngredientInput: ResolverTypeWrapper<Partial<IngredientInput>>;
   Recipe: ResolverTypeWrapper<Partial<Recipe>>;
+  RecipeIngredient: ResolverTypeWrapper<Partial<RecipeIngredient>>;
+  RecipeInput: ResolverTypeWrapper<Partial<RecipeInput>>;
+  RecipeIngredientInput: ResolverTypeWrapper<Partial<RecipeIngredientInput>>;
   User: ResolverTypeWrapper<Partial<User>>;
+  UserInput: ResolverTypeWrapper<Partial<UserInput>>;
+  LoginInput: ResolverTypeWrapper<Partial<LoginInput>>;
   CacheControlScope: ResolverTypeWrapper<Partial<CacheControlScope>>;
   Upload: ResolverTypeWrapper<Partial<Scalars['Upload']>>;
 }>;
@@ -188,27 +298,47 @@ export type ResolversParentTypes = ResolversObject<{
   Mutation: {};
   Day: Partial<Day>;
   DayInput: Partial<DayInput>;
+  DayRecipeInput: Partial<DayRecipeInput>;
   Ingredient: Partial<Ingredient>;
   IngredientCategory: Partial<IngredientCategory>;
+  IngredientInput: Partial<IngredientInput>;
   Recipe: Partial<Recipe>;
+  RecipeIngredient: Partial<RecipeIngredient>;
+  RecipeInput: Partial<RecipeInput>;
+  RecipeIngredientInput: Partial<RecipeIngredientInput>;
   User: Partial<User>;
+  UserInput: Partial<UserInput>;
+  LoginInput: Partial<LoginInput>;
   Upload: Partial<Scalars['Upload']>;
 }>;
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   _empty?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   days?: Resolver<Maybe<Array<Maybe<ResolversTypes['Day']>>>, ParentType, ContextType, RequireFields<QueryDaysArgs, never>>;
+  day?: Resolver<Maybe<ResolversTypes['Day']>, ParentType, ContextType, RequireFields<QueryDayArgs, never>>;
+  ingredients?: Resolver<Maybe<Array<Maybe<ResolversTypes['Ingredient']>>>, ParentType, ContextType>;
+  recipes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Recipe']>>>, ParentType, ContextType>;
+  recipe?: Resolver<Maybe<ResolversTypes['Recipe']>, ParentType, ContextType, RequireFields<QueryRecipeArgs, never>>;
 }>;
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   _empty?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   createDay?: Resolver<Maybe<ResolversTypes['Day']>, ParentType, ContextType, RequireFields<MutationCreateDayArgs, never>>;
+  addRecipeToDay?: Resolver<Maybe<ResolversTypes['Day']>, ParentType, ContextType, RequireFields<MutationAddRecipeToDayArgs, never>>;
+  removeRecipeFromDay?: Resolver<Maybe<ResolversTypes['Day']>, ParentType, ContextType, RequireFields<MutationRemoveRecipeFromDayArgs, never>>;
+  createIngredient?: Resolver<Maybe<ResolversTypes['Ingredient']>, ParentType, ContextType, RequireFields<MutationCreateIngredientArgs, never>>;
+  createRecipe?: Resolver<Maybe<ResolversTypes['Recipe']>, ParentType, ContextType, RequireFields<MutationCreateRecipeArgs, never>>;
+  addIngredientToRecipe?: Resolver<Maybe<ResolversTypes['Recipe']>, ParentType, ContextType, RequireFields<MutationAddIngredientToRecipeArgs, never>>;
+  removeIngredientFromRecipe?: Resolver<Maybe<ResolversTypes['Recipe']>, ParentType, ContextType, RequireFields<MutationRemoveIngredientFromRecipeArgs, never>>;
+  login?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationLoginArgs, never>>;
+  logout?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createUser?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, never>>;
 }>;
 
 export type DayResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Day'] = ResolversParentTypes['Day']> = ResolversObject<{
   id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   date?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  recipe?: Resolver<Maybe<ResolversTypes['Recipe']>, ParentType, ContextType>;
+  recipes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Recipe']>>>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 }>;
@@ -231,7 +361,15 @@ export type IngredientCategoryResolvers<ContextType = Context, ParentType extend
 export type RecipeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Recipe'] = ResolversParentTypes['Recipe']> = ResolversObject<{
   id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  ingredients?: Resolver<Maybe<Array<Maybe<ResolversTypes['Ingredient']>>>, ParentType, ContextType>;
+  ingredients?: Resolver<Maybe<Array<Maybe<ResolversTypes['RecipeIngredient']>>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+}>;
+
+export type RecipeIngredientResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RecipeIngredient'] = ResolversParentTypes['RecipeIngredient']> = ResolversObject<{
+  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  amount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  ingredient?: Resolver<Maybe<ResolversTypes['Ingredient']>, ParentType, ContextType>;
+  recipe?: Resolver<Maybe<ResolversTypes['Recipe']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 }>;
 
@@ -253,6 +391,7 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   Ingredient?: IngredientResolvers<ContextType>;
   IngredientCategory?: IngredientCategoryResolvers<ContextType>;
   Recipe?: RecipeResolvers<ContextType>;
+  RecipeIngredient?: RecipeIngredientResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   Upload?: GraphQLScalarType;
 }>;

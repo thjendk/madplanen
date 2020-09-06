@@ -3,7 +3,6 @@ import { Model } from 'objection';
 interface Day {
 	id: number;
 	date: Date;
-	recipeId: number;
 	userId: number;
 }
 
